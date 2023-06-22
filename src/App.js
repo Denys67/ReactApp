@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './App.css'; // Import the CSS file for styling
 
 function App() {
   const [tasks, setTasks] = useState(() => {
@@ -11,11 +12,11 @@ function App() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
 
-  const InputChange = (event) => {
+  const inputChange = (event) => {
     setInputValue(event.target.value);
   };
 
-  const AddTask = () => {
+  const addTask = () => {
     if (inputValue.trim() !== '') {
       const newTask = {
         id: Date.now(),
@@ -28,7 +29,7 @@ function App() {
     }
   };
 
-  const CompleteTask = (id) => {
+  const completeTask = (id) => {
     const updatedTasks = tasks.map((task) =>
       task.id === id ? { ...task, completed: !task.completed } : task
     );
@@ -36,41 +37,38 @@ function App() {
     setTasks(updatedTasks);
   };
 
-  const DeleteTask = (id) => {
+  const deleteTask = (id) => {
     const updatedTasks = tasks.filter((task) => task.id !== id);
 
     setTasks(updatedTasks);
   };
 
   return (
-    <div>
+    <div className="box">
       <h1>Todo List Workshop</h1>
       <input
         type="text"
         value={inputValue}
-        onChange={InputChange}
+        onChange={inputChange}
         placeholder="Add task"
       />
-      <button onClick={AddTask}>Add</button>
+      <button onClick={addTask}>Add</button>
       <ul>
         {tasks.map((task) => (
           <li key={task.id}>
             <span
-              style={{
-                textDecoration: task.completed ? 'line-through' : 'none',
-              }}
+              className={task.completed ? 'completed' : 'not-completed'}
             >
               {task.text}
             </span>
-            <button onClick={() => CompleteTask(task.id)}>
+            <button onClick={() => completeTask(task.id)}>
               {task.completed ? 'Undo' : 'Complete'}
             </button>
-            <button onClick={() => DeleteTask(task.id)}>Delete</button>
+            <button onClick={() => deleteTask(task.id)}>Delete</button>
           </li>
         ))}
       </ul>
     </div>
   );
 }
-
 export default App;
